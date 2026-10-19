@@ -1,0 +1,577 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090a12">
+<meta name="description" content="AnimeVerse — explore anime characters, rankings, quizzes and recommendations.">
+<title>AnimeVerse — Anime Beyond Limits</title>
+<style>
+:root {
+  --bg:#090a12; --panel:#111321; --panel2:#171a2b;
+  --text:#f4f5ff; --muted:#9da3bd; --purple:#9b7bff;
+  --blue:#54c8ff; --line:#282c43; --pink:#ff77c8;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);
+  font-family:Inter,system-ui,-apple-system,Arial,sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible{
+  outline:2px solid var(--blue);outline-offset:3px}
+a{color:var(--blue)}
+.topline{height:3px;background:linear-gradient(90deg,var(--purple),var(--blue),var(--pink))}
+header{position:sticky;top:0;z-index:10;background:#090a12ed;
+  backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+.nav{max-width:1200px;margin:auto;padding:15px 20px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo{font-size:22px;font-weight:900;letter-spacing:-1px;white-space:nowrap}
+.logo span{color:var(--purple)}
+.navlinks{display:flex;gap:7px;flex-wrap:wrap}
+.navbtn,.btn{border:1px solid var(--line);border-radius:10px;
+  padding:10px 14px;color:var(--text);background:var(--panel2)}
+.navbtn.active,.btn.primary{background:linear-gradient(120deg,#7455db,#4e75db);
+  border-color:transparent}
+.navbtn:hover,.btn:hover{filter:brightness(1.2)}
+main{max-width:1200px;margin:auto;padding:25px 20px 60px}
+.page{display:none;animation:appear .3s ease}
+.page.active{display:block}
+@keyframes appear{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.hero{position:relative;overflow:hidden;padding:clamp(28px,6vw,70px);
+  border:1px solid #353054;border-radius:24px;
+  background:radial-gradient(ellipse at 90% 10%,#5940a54d,transparent 38%),
+  radial-gradient(ellipse at 10% 100%,#2469a62b,transparent 40%),#111221}
+.eyebrow{color:var(--blue);font-size:12px;font-weight:800;
+  letter-spacing:2px;text-transform:uppercase}
+h1{font-size:clamp(35px,7vw,70px);line-height:1.04;
+  letter-spacing:-2.5px;margin:16px 0}
+.gradient{background:linear-gradient(90deg,#c4aaff,#64d5ff);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p,.intro{max-width:650px;color:var(--muted);line-height:1.8}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:23px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0 30px}
+.stat,.box{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:17px}
+.stat strong{display:block;font-size:25px}.stat span{font-size:12px;color:var(--muted)}
+.sectionhead{display:flex;justify-content:space-between;align-items:end;
+  flex-wrap:wrap;gap:12px;margin:30px 0 16px}
+h2{font-size:25px;margin:0;letter-spacing:-.6px}
+h3{margin:0 0 8px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
+.field{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+  padding:12px;color:var(--text);min-width:0}
+.toolbar .field{flex:1;min-width:140px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.card{overflow:hidden;background:var(--panel);border:1px solid var(--line);
+  border-radius:15px;transition:transform .2s,border-color .2s}
+.card:hover{transform:translateY(-4px);border-color:#7564b9}
+.poster{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;background:#1b1c30}
+.cardbody{padding:13px}
+.card h3{font-size:15px;line-height:1.4}
+.meta{font-size:12px;color:var(--muted);line-height:1.6}
+.cardfoot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px}
+.rank{color:var(--blue);font-weight:800;font-size:12px}
+.smallbtn{border:1px solid var(--line);background:var(--panel2);color:var(--text);
+  border-radius:8px;padding:8px 10px;font-size:12px}
+.smallbtn:hover{border-color:var(--purple)}
+.empty,.status{padding:25px;text-align:center;color:var(--muted);
+  border:1px dashed var(--line);border-radius:14px;line-height:1.7}
+.pill{display:inline-block;padding:5px 9px;border-radius:7px;
+  background:#9b7bff1c;color:#c8b8ff;font-size:11px;margin:3px 3px 3px 0}
+.quizbox{max-width:760px;margin:22px auto;background:var(--panel);
+  border:1px solid var(--line);border-radius:20px;padding:clamp(18px,4vw,32px)}
+.quiztop{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:13px}
+.progress{height:5px;background:var(--line);border-radius:10px;margin:16px 0 26px;overflow:hidden}
+.progress div{height:100%;width:0;background:linear-gradient(90deg,var(--purple),var(--blue))}
+.answers{display:grid;gap:10px;margin:20px 0}
+.answer{padding:14px;text-align:left;color:var(--text);background:var(--panel2);
+  border:1px solid var(--line);border-radius:10px}
+.answer.correct{border-color:#42dba0;background:#123528}
+.answer.wrong{border-color:#ff7e92;background:#3b202c}
+.answer:disabled{cursor:default}
+.feedback{min-height:28px;color:var(--muted);line-height:1.6}
+.listrow{display:flex;align-items:center;gap:14px;padding:12px 0;
+  border-bottom:1px solid var(--line)}
+.listrow img{width:58px;height:76px;object-fit:cover;border-radius:8px;background:var(--panel2)}
+.listrow .grow{flex:1;min-width:0}
+.listrow h3{font-size:14px;overflow-wrap:anywhere}
+.listrow p{font-size:12px;color:var(--muted);margin:5px 0}
+footer{border-top:1px solid var(--line);padding:26px 20px;text-align:center;
+  color:var(--muted);font-size:12px;line-height:1.8}
+dialog{width:min(620px,calc(100% - 24px));max-height:85vh;overflow:auto;
+  background:var(--panel);color:var(--text);border:1px solid #464363;
+  border-radius:18px;padding:22px}
+dialog::backdrop{background:#02030bd9;backdrop-filter:blur(4px)}
+.profilehead{display:flex;gap:18px;align-items:start}
+.profilehead img{width:125px;max-width:38%;border-radius:12px;object-fit:cover}
+.profiletext{color:var(--muted);line-height:1.8;font-size:14px;white-space:pre-line}
+.modalclose{float:right}
+.loading{color:var(--muted);padding:20px 0}
+.hidden{display:none!important}
+@media(max-width:850px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:600px){
+  .nav{padding:12px;align-items:flex-start;flex-direction:column}
+  .navlinks{width:100%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+  .navbtn{padding:9px 3px;font-size:11px}
+  main{padding:16px 12px 40px}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .cardbody{padding:10px}.card h3{font-size:13px}
+  .cardfoot{align-items:flex-start;flex-direction:column}
+  .stats{gap:8px}.stat{padding:12px}.stat strong{font-size:20px}
+  h2{font-size:22px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;scroll-behavior:auto!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<div class="topline"></div>
+<header>
+  <nav class="nav" aria-label="Main navigation">
+    <div class="logo">ANIME<span>VERSE</span></div>
+    <div class="navlinks">
+      <button class="navbtn active" data-page="home">Home</button>
+      <button class="navbtn" data-page="characters">Characters</button>
+      <button class="navbtn" data-page="quiz">Quiz</button>
+      <button class="navbtn" data-page="discover">Discover</button>
+    </div>
+  </nav>
+</header>
+
+<main>
+<section id="home" class="page active">
+  <div class="hero">
+    <div class="eyebrow">Your anime universe</div>
+    <h1>Beyond the screen.<br><span class="gradient">Into the universe.</span></h1>
+    <p>Explore legendary characters, challenge your anime knowledge, and discover your next favourite series. Your journey starts here.</p>
+    <div class="hero-actions">
+      <button class="btn primary" data-go="characters">Explore characters ↗</button>
+      <button class="btn" data-go="quiz">Take the quiz</button>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="stat"><strong id="characterCount">—</strong><span>Characters loaded</span></div>
+    <div class="stat"><strong id="animeCount">—</strong><span>Anime titles loaded</span></div>
+    <div class="stat"><strong id="favCount">0</strong><span>Your favourites</span></div>
+  </div>
+  <div class="sectionhead"><div><div class="eyebrow">Fan favourites</div><h2>Popular characters</h2></div>
+    <button class="smallbtn" data-go="characters">View all →</button></div>
+  <div id="homeCharacters" class="grid"><div class="status">Loading characters…</div></div>
+  <div class="sectionhead"><div><div class="eyebrow">Worth discovering</div><h2>Top anime</h2></div>
+    <button class="smallbtn" data-go="discover">Explore rankings →</button></div>
+  <div id="homeAnime" class="grid"><div class="status">Loading anime…</div></div>
+</section>
+
+<section id="characters" class="page">
+  <div class="eyebrow">Character database</div><h1>Character <span class="gradient">rankings.</span></h1>
+  <p class="intro">Discover famous characters, learn about their stories and save your favourites.</p>
+  <div class="toolbar">
+    <input id="charSearch" class="field" type="search" placeholder="Search characters…" aria-label="Search characters">
+    <select id="charSort" class="field" aria-label="Sort characters">
+      <option value="rank">Top ranking</option><option value="name">Name A–Z</option><option value="favorites">Most favourites</option>
+    </select>
+    <button class="btn" id="showFavs">♥ Favourites</button>
+  </div>
+  <div id="charStatus" class="status">Loading character database…</div>
+  <div id="characterGrid" class="grid"></div>
+  <div style="text-align:center;margin:24px"><button id="moreChars" class="btn hidden">Load more characters</button></div>
+</section>
+
+<section id="quiz" class="page">
+  <div class="eyebrow">Test your knowledge</div><h1>Anime <span class="gradient">challenge.</span></h1>
+  <p class="intro">Think you know your anime? Choose your difficulty and put your knowledge to the test.</p>
+  <div class="quizbox">
+    <div class="toolbar">
+      <select id="difficulty" class="field" aria-label="Quiz difficulty">
+        <option value="easy">Easy</option><option value="medium">Medium</option><option value="hard">Hard</option>
+      </select>
+      <button class="btn primary" id="startQuiz">Start / Restart quiz</button>
+    </div>
+    <div id="quizContent">
+      <h2>Ready, anime fan?</h2>
+      <p class="intro">Ten questions. Four choices each. One high score to beat.</p>
+    </div>
+  </div>
+</section>
+
+<section id="discover" class="page">
+  <div class="eyebrow">Find your next adventure</div><h1>Anime <span class="gradient">discovery.</span></h1>
+  <p class="intro">Explore popular series using public ranking data. Rankings and scores may change over time.</p>
+  <div class="toolbar">
+    <input id="animeSearch" class="field" type="search" placeholder="Search anime…" aria-label="Search anime">
+    <select id="animeSort" class="field" aria-label="Anime ranking filter">
+      <option value="rank">Top ranked</option><option value="score">Highest score</option><option value="members">Most popular</option>
+    </select>
+  </div>
+  <div id="animeStatus" class="status">Loading anime rankings…</div>
+  <div id="animeGrid" class="grid"></div>
+  <div style="text-align:center;margin:24px"><button id="moreAnime" class="btn hidden">Load more anime</button></div>
+  <div class="box" style="margin-top:28px">
+    <h2>How recommendations work</h2>
+    <p class="profiletext">Rankings come from a public anime-data service and reflect its available data, not an official AnimeVerse ranking. Check each series' age rating and content description before watching. This site is designed for a teen audience.</p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <strong>ANIMEVERSE</strong> — Made for anime fans.<br>
+  Fan-made discovery project. Not affiliated with any anime studio or franchise.
+  Character and anime images and data are supplied by third parties and their respective owners.
+  <br>Ranking data: <a href="https://jikan.moe/" target="_blank" rel="noopener noreferrer">Jikan API</a>.
+</footer>
+
+<dialog id="profileDialog">
+  <button class="smallbtn modalclose" id="closeProfile">✕ Close</button>
+  <div id="profileContent" style="padding-top:28px">Loading profile…</div>
+</dialog>
+
+<script>
+"use strict";
+const API="https://api.jikan.moe/v4";
+const $=id=>document.getElementById(id);
+const state={
+  characters:[],anime:[],charPage:1,animePage:1,
+  charLoading:false,animeLoading:false,favs:new Set(),
+  favOnly:false,quiz:[],qIndex:0,score:0,answered:false
+};
+try{
+  state.favs=new Set(JSON.parse(localStorage.getItem("animeverse-favs")||"[]"));
+}catch(e){state.favs=new Set()}
+
+const fallbackCharacters=[
+ {mal_id:1,name:"Spike Spiegel",about:"A relaxed bounty hunter with a complicated past.",anime:"Cowboy Bebop",image:"https://cdn.myanimelist.net/images/characters/4/50197.jpg",favorites:0},
+ {mal_id:2,name:"Edward Elric",about:"A determined young alchemist searching for a way to restore what was lost.",anime:"Fullmetal Alchemist",image:"https://cdn.myanimelist.net/images/characters/9/72533.jpg",favorites:0},
+ {mal_id:3,name:"Luffy",about:"An adventurous pirate with an enormous dream.",anime:"One Piece",image:"https://cdn.myanimelist.net/images/characters/9/310307.jpg",favorites:0},
+ {mal_id:4,name:"Naruto Uzumaki",about:"An energetic ninja who never gives up on his dream.",anime:"Naruto",image:"https://cdn.myanimelist.net/images/characters/2/284147.jpg",favorites:0},
+ {mal_id:5,name:"Tanjiro Kamado",about:"A kind-hearted swordsman on a mission to help his sister.",anime:"Demon Slayer",image:"https://cdn.myanimelist.net/images/characters/3/422096.jpg",favorites:0},
+ {mal_id:6,name:"Goku",about:"A martial artist who loves training and challenging himself.",anime:"Dragon Ball",image:"https://cdn.myanimelist.net/images/characters/11/294733.jpg",favorites:0}
+];
+const fallbackAnime=[
+ {mal_id:1,title:"Cowboy Bebop",score:8.75,rank:1,members:1000000,synopsis:"A science-fiction adventure following a crew of bounty hunters.",image:"https://cdn.myanimelist.net/images/anime/4/19644.jpg",rating:"Check current rating"},
+ {mal_id:2,title:"Fullmetal Alchemist",score:8.7,rank:2,members:1000000,synopsis:"Two brothers seek to fix a mistake through the study of alchemy.",image:"https://cdn.myanimelist.net/images/anime/3/24307.jpg",rating:"Check current rating"},
+ {mal_id:3,title:"One Piece",score:8.7,rank:3,members:1000000,synopsis:"A pirate crew sails toward a legendary treasure.",image:"https://cdn.myanimelist.net/images/anime/6/73245.jpg",rating:"Check current rating"}
+];
+
+function safeImage(obj){
+  return obj?.images?.webp?.large_image_url||
+         obj?.images?.jpg?.large_image_url||obj?.image||"";
+}
+function escapeHTML(value){
+  return String(value??"").replace(/[&<>"']/g,c=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+function savedFavs(){
+  try{localStorage.setItem("animeverse-favs",JSON.stringify([...state.favs]))}
+  catch(e){}
+  $("favCount").textContent=state.favs.size;
+}
+function setStatus(id,msg){$(id).textContent=msg}
+async function fetchJSON(url){
+  const response=await fetch(url);
+  if(!response.ok)throw new Error("Data service unavailable ("+response.status+")");
+  return response.json();
+}
+function normalizeCharacter(c,index){
+  return {
+    mal_id:c.mal_id||("fallback-"+index),
+    name:c.name||"Unknown character",
+    about:c.about||"",
+    favorites:c.favorites||0,
+    image:safeImage(c),
+    anime:c.anime||"Anime character",
+    rank:c.rank||index+1
+  };
+}
+function normalizeAnime(a,index){
+  return {
+    mal_id:a.mal_id||("anime-"+index),title:a.title||"Unknown anime",
+    score:a.score||0,rank:a.rank||index+1,members:a.members||0,
+    synopsis:a.synopsis||"",image:safeImage(a),
+    rating:a.rating||"Check official listing"
+  };
+}
+function imgHTML(src,alt,cls="poster"){
+  const fallback="https://placehold.co/420x560/171a2b/c4b5fd?text=AnimeVerse";
+  return `<img class="${cls}" src="${escapeHTML(src||fallback)}" alt="${escapeHTML(alt)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='${fallback}'">`;
+}
+function characterCard(c,index){
+  const isFav=state.favs.has(String(c.mal_id));
+  return `<article class="card">
+    ${imgHTML(c.image,c.name)}
+    <div class="cardbody">
+      <div class="rank">#${index+1} CHARACTER</div>
+      <h3>${escapeHTML(c.name)}</h3>
+      <div class="meta">${escapeHTML(c.anime)}</div>
+      <div class="cardfoot">
+        <button class="smallbtn" data-profile="${escapeHTML(c.mal_id)}">View profile ↗</button>
+        <button class="smallbtn" data-fav="${escapeHTML(c.mal_id)}" aria-label="${isFav?"Remove":"Add"} ${escapeHTML(c.name)} ${isFav?"from":"to"} favourites">${isFav?"♥ Saved":"♡ Save"}</button>
+      </div>
+    </div>
+  </article>`;
+}
+function animeCard(a,index){
+  return `<article class="card">
+    ${imgHTML(a.image,a.title)}
+    <div class="cardbody">
+      <div class="rank">#${a.rank||index+1} ANIME</div>
+      <h3>${escapeHTML(a.title)}</h3>
+      <div class="meta">Score: ${a.score?escapeHTML(a.score):"N/A"} · Members: ${Number(a.members||0).toLocaleString()}</div>
+      <div class="cardfoot">
+        <button class="smallbtn" data-anime-profile="${escapeHTML(a.mal_id)}">Details ↗</button>
+        <a class="smallbtn" href="https://myanimelist.net/anime/${encodeURIComponent(a.mal_id)}" target="_blank" rel="noopener noreferrer">More info</a>
+      </div>
+    </div>
+  </article>`;
+}
+function filteredCharacters(){
+  const q=$("charSearch").value.trim().toLowerCase();
+  let items=state.characters.filter(c=>(c.name+" "+c.anime).toLowerCase().includes(q));
+  if(state.favOnly)items=items.filter(c=>state.favs.has(String(c.mal_id)));
+  if($("charSort").value==="name")items.sort((a,b)=>a.name.localeCompare(b.name));
+  if($("charSort").value==="favorites")items.sort((a,b)=>b.favorites-a.favorites);
+  return items;
+}
+function renderCharacters(){
+  const items=filteredCharacters();
+  $("characterGrid").innerHTML=items.map((c,i)=>characterCard(c,i)).join("");
+  $("homeCharacters").innerHTML=state.characters.slice(0,4).map((c,i)=>characterCard(c,i)).join("");
+  $("characterCount").textContent=state.characters.length+(state.charLoading?"+":"");
+  $("moreChars").classList.toggle("hidden",state.charLoading||state.characters.length===0||state.characters.length<state.charPage*20);
+  if(!items.length)setStatus("charStatus",state.favOnly?"No saved favourites yet.":"No matching characters found.");
+  else setStatus("charStatus",state.charLoading?"Loading…":items.length+" characters shown. Rankings are from the data provider.");
+}
+function filteredAnime(){
+  const q=$("animeSearch").value.trim().toLowerCase();
+  let items=state.anime.filter(a=>a.title.toLowerCase().includes(q));
+  const sort=$("animeSort").value;
+  if(sort==="score")items.sort((a,b)=>b.score-a.score);
+  if(sort==="members")items.sort((a,b)=>b.members-a.members);
+  if(sort==="rank")items.sort((a,b)=>a.rank-b.rank);
+  return items;
+}
+function renderAnime(){
+  const items=filteredAnime();
+  $("animeGrid").innerHTML=items.map((a,i)=>animeCard(a,i)).join("");
+  $("homeAnime").innerHTML=state.anime.slice(0,4).map((a,i)=>animeCard(a,i)).join("");
+  $("animeCount").textContent=state.anime.length+(state.animeLoading?"+":"");
+  $("moreAnime").classList.toggle("hidden",state.animeLoading||state.anime.length===0||state.anime.length<state.animePage*20);
+  setStatus("animeStatus",items.length?items.length+" series shown. Scores and ranks can change.":"No matching anime found.");
+}
+async function loadCharacters(){
+  if(state.charLoading)return;
+  state.charLoading=true;renderCharacters();
+  try{
+    const data=await fetchJSON(`${API}/top/characters?page=${state.charPage}&limit=20`);
+    const rows=(data.data||[]).map(normalizeCharacter);
+    if(!rows.length)throw new Error("No characters returned");
+    const existing=new Set(state.characters.map(c=>String(c.mal_id)));
+    state.characters.push(...rows.filter(c=>!existing.has(String(c.mal_id))));
+    state.charPage++;
+    if(!state.characters.length)state.characters=fallbackCharacters.map(normalizeCharacter);
+    $("charStatus").textContent="Live character data loaded.";
+  }catch(e){
+    if(!state.characters.length)state.characters=fallbackCharacters.map(normalizeCharacter);
+    $("charStatus").textContent="Showing starter characters. Live data is temporarily unavailable.";
+  }finally{state.charLoading=false;renderCharacters()}
+}
+async function loadAnime(){
+  if(state.animeLoading)return;
+  state.animeLoading=true;renderAnime();
+  try{
+    const data=await fetchJSON(`${API}/top/anime?page=${state.animePage}&limit=20&sfw=true`);
+    const rows=(data.data||[]).map(normalizeAnime);
+    if(!rows.length)throw new Error("No anime returned");
+    const existing=new Set(state.anime.map(a=>String(a.mal_id)));
+    state.anime.push(...rows.filter(a=>!existing.has(String(a.mal_id))));
+    state.animePage++;
+    $("animeStatus").textContent="Live anime ranking data loaded.";
+  }catch(e){
+    if(!state.anime.length)state.anime=fallbackAnime.map(normalizeAnime);
+    $("animeStatus").textContent="Showing available starter data. Live rankings are temporarily unavailable.";
+  }finally{state.animeLoading=false;renderAnime()}
+}
+function go(page){
+  document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id===page));
+  document.querySelectorAll(".navbtn").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
+  window.scrollTo({top:0,behavior:"smooth"});
+  if(page==="characters"&&!state.characters.length)loadCharacters();
+  if(page==="discover"&&!state.anime.length)loadAnime();
+}
+document.addEventListener("click",e=>{
+  const nav=e.target.closest("[data-page]");
+  if(nav){go(nav.dataset.page);return}
+  const goBtn=e.target.closest("[data-go]");
+  if(goBtn){go(goBtn.dataset.go);return}
+  const fav=e.target.closest("[data-fav]");
+  if(fav){
+    const id=String(fav.dataset.fav);
+    state.favs.has(id)?state.favs.delete(id):state.favs.add(id);
+    savedFavs();renderCharacters();return;
+  }
+  const profile=e.target.closest("[data-profile]");
+  if(profile)showCharacter(profile.dataset.profile);
+  const anime=e.target.closest("[data-anime-profile]");
+  if(anime)showAnime(anime.dataset.animeProfile);
+});
+$("closeProfile").addEventListener("click",()=>$("profileDialog").close());
+$("profileDialog").addEventListener("click",e=>{
+  if(e.target===$("profileDialog"))$("profileDialog").close();
+});
+$("charSearch").addEventListener("input",renderCharacters);
+$("charSort").addEventListener("change",renderCharacters);
+$("showFavs").addEventListener("click",()=>{
+  state.favOnly=!state.favOnly;
+  $("showFavs").textContent=state.favOnly?"♥ All characters":"♥ Favourites";
+  renderCharacters();
+});
+$("animeSearch").addEventListener("input",renderAnime);
+$("animeSort").addEventListener("change",renderAnime);
+$("moreChars").addEventListener("click",loadCharacters);
+$("moreAnime").addEventListener("click",loadAnime);
+
+async function showCharacter(id){
+  const c=state.characters.find(x=>String(x.mal_id)===String(id));
+  if(!c)return;
+  $("profileContent").innerHTML=`<div class="loading">Loading character details…</div>`;
+  $("profileDialog").showModal();
+  let about=c.about||"A character from the anime universe.";
+  let anime=c.anime||"See the linked profile for anime appearances.";
+  let url=`https://myanimelist.net/character/${encodeURIComponent(id)}`;
+  if(!String(id).startsWith("fallback-")){
+    try{
+      const d=await fetchJSON(`${API}/characters/${encodeURIComponent(id)}/full`);
+      const x=d.data;
+      about=x.about||about;
+      anime=(x.anime||[]).slice(0,5).map(a=>a.anime?.title).filter(Boolean).join(", ")||anime;
+      url=x.url||url;
+    }catch(e){}
+  }
+  $("profileContent").innerHTML=`
+    <div class="profilehead">${imgHTML(c.image,c.name,"")}
+      <div><div class="eyebrow">Character profile</div>
+      <h2>${escapeHTML(c.name)}</h2>
+      <p class="meta">${escapeHTML(anime)}</p>
+      <span class="pill">♥ ${Number(c.favorites||0).toLocaleString()} favourites</span></div>
+    </div>
+    <h3 style="margin-top:24px">Biography</h3>
+    <div class="profiletext">${escapeHTML(about)}</div>
+    <p><a href="${escapeHTML(url)}" target="_blank" rel="noopener noreferrer">Open full source profile ↗</a></p>`;
+}
+async function showAnime(id){
+  const a=state.anime.find(x=>String(x.mal_id)===String(id));
+  if(!a)return;
+  $("profileContent").innerHTML=`<div class="loading">Loading anime details…</div>`;
+  $("profileDialog").showModal();
+  let synopsis=a.synopsis||"No synopsis is available in the starter data.";
+  let rating=a.rating||"Check the official listing for the latest age guidance.";
+  if(!String(id).startsWith("anime-")){
+    try{
+      const d=await fetchJSON(`${API}/anime/${encodeURIComponent(id)}/full`);
+      synopsis=d.data.synopsis||synopsis;
+      rating=d.data.rating||rating;
+    }catch(e){}
+  }
+  $("profileContent").innerHTML=`
+    <div class="profilehead">${imgHTML(a.image,a.title,"")}
+      <div><div class="eyebrow">Anime details</div><h2>${escapeHTML(a.title)}</h2>
+      <p class="meta">Rank #${a.rank} · Score ${a.score||"N/A"}</p>
+      <span class="pill">${escapeHTML(rating)}</span></div>
+    </div>
+    <h3 style="margin-top:24px">Synopsis</h3>
+    <div class="profiletext">${escapeHTML(synopsis)}</div>
+    <p><strong>Before watching:</strong> Check the series' current age rating and content guidance.</p>
+    <p><a href="https://myanimelist.net/anime/${encodeURIComponent(id)}" target="_blank" rel="noopener noreferrer">View source listing ↗</a></p>`;
+}
+
+// Quiz questions are original short trivia, suitable for a teen audience.
+const questions={
+easy:[
+ ["Which character wants to become Hokage?","Naruto","Luffy","Goku","Tanjiro",0],
+ ["What is Luffy famous for wanting to find?","A Dragon Ball","One Piece","A Death Note","A Poké Ball",1],
+ ["Which series features a young alchemist named Edward?","One Piece","Naruto","Fullmetal Alchemist","Bleach",2],
+ ["What is the name of Goku's signature energy attack?","Kamehameha","Rasengan","Getsuga Tensho","Domain Expansion",0],
+ ["Which character is Tanjiro's sister?","Sakura","Nami","Nezuko","Bulma",2],
+ ["Which anime features a crew aboard the Bebop?","Cowboy Bebop","One Piece","Pokémon","Naruto",0],
+ ["Which of these is a ninja-themed anime?","Haikyuu!!","Naruto","Your Name","Spy x Family",1],
+ ["Which series features Pokémon trainers?","Demon Slayer","Pokémon","Bleach","Death Note",1],
+ ["What is a manga?","A Japanese comic","A music instrument","A type of food","A video console",0],
+ ["What do anime fans usually call an opening theme?","Ending","OP","OVA","Dub",1]
+],
+medium:[
+ ["Which organisation is associated with the Survey Corps?","Attack on Titan","One Piece","Dragon Ball","Pokémon",0],
+ ["What is the name of the notebook in Death Note?","Black Book","Soul Journal","Death Note","Dark Diary",2],
+ ["Which series features the Straw Hat Pirates?","Bleach","One Piece","Naruto","Blue Lock",1],
+ ["What is the main sport in Haikyuu!!?","Basketball","Football","Volleyball","Tennis",2],
+ ["Which studio created the film Spirited Away?","Studio Ghibli","MAPPA","Ufotable","Bones",0],
+ ["Which anime features alchemy as a central concept?","Fullmetal Alchemist","One Piece","Haikyuu!!","Pokémon",0],
+ ["What is the name of Ichigo's series?","Bleach","Naruto","Dr. Stone","Spy x Family",0],
+ ["Which series includes the character Anya Forger?","Spy x Family","Demon Slayer","One Piece","Black Clover",0],
+ ["What is a 'sequel'?","A story that continues an earlier one","A character portrait","A soundtrack","A type of animation frame",0],
+ ["Which series features the Saiyan race?","Dragon Ball","Death Note","Haikyuu!!","Your Name",0]
+],
+hard:[
+ ["Which film features the moving castle associated with Howl?","Castle in the Sky","Howl's Moving Castle","Ponyo","The Wind Rises",1],
+ ["Which series features the alchemist Roy Mustang?","Fullmetal Alchemist","Bleach","Naruto","One Piece",0],
+ ["Which creator is associated with One Piece?","Eiichiro Oda","Akira Toriyama","Rumiko Takahashi","Hajime Isayama",0],
+ ["Which series includes the character Senku Ishigami?","Dr. Stone","Blue Lock","Berserk","Haikyuu!!",0],
+ ["Which anime features the fictional setting of Soul Society?","Bleach","Pokémon","Cowboy Bebop","Spy x Family",0],
+ ["Which series features the character Killua Zoldyck?","Hunter x Hunter","Naruto","One Piece","Demon Slayer",0],
+ ["Which film was directed by Makoto Shinkai?","Your Name","Spirited Away","Akira","Perfect Blue",0],
+ ["Which series features the Joestar family?","JoJo's Bizarre Adventure","Dragon Ball","Bleach","Dr. Stone",0],
+ ["Which series features the alchemist known as the Flame Alchemist?","Fullmetal Alchemist","One Piece","Black Clover","Pokémon",0],
+ ["What does OVA commonly stand for in anime releases?","Original Video Animation","Online Viewing Access","Official Voice Album","Original Visual Art",0]
+]};
+function startQuiz(){
+  const diff=$("difficulty").value;
+  state.quiz=questions[diff].map(q=>q.slice()).sort(()=>Math.random()-.5);
+  state.qIndex=0;state.score=0;state.answered=false;
+  renderQuestion();
+}
+function renderQuestion(){
+  const root=$("quizContent");
+  if(state.qIndex>=state.quiz.length){
+    const pct=Math.round(state.score/state.quiz.length*100);
+    root.innerHTML=`<div class="eyebrow">Challenge complete</div>
+      <h2 style="font-size:38px;margin:16px 0">${state.score}/${state.quiz.length}</h2>
+      <p class="intro">You scored ${pct}%. ${pct>=80?"Excellent work, anime expert!":pct>=50?"Nice work! Keep sharpening your anime knowledge.":"Keep exploring and try again!"}</p>
+      <button class="btn primary" id="again">Play again</button>`;
+    $("again").onclick=startQuiz;return;
+  }
+  const q=state.quiz[state.qIndex];
+  root.innerHTML=`<div class="quiztop"><span>Question ${state.qIndex+1} of ${state.quiz.length}</span><span>Score: ${state.score}</span></div>
+    <div class="progress"><div style="width:${state.qIndex/state.quiz.length*100}%"></div></div>
+    <h2>${escapeHTML(q[0])}</h2><div class="answers">${q.slice(1,5).map((a,i)=>`<button class="answer" data-answer="${i}">${String.fromCharCode(65+i)}. ${escapeHTML(a)}</button>`).join("")}</div>
+    <div class="feedback" id="feedback" aria-live="polite"></div>
+    <button id="nextQuestion" class="btn primary hidden">${state.qIndex===state.quiz.length-1?"See results":"Next question →"}</button>`;
+  root.querySelectorAll("[data-answer]").forEach(btn=>btn.addEventListener("click",()=>{
+    if(state.answered)return;
+    state.answered=true;
+    const selected=Number(btn.dataset.answer),correct=q[5];
+    root.querySelectorAll("[data-answer]").forEach(b=>{
+      b.disabled=true;
+      if(Number(b.dataset.answer)===correct)b.classList.add("correct");
+    });
+    if(selected===correct){
+      state.score++;
+      $("feedback").textContent="Correct! Great knowledge.";
+    }else{
+      btn.classList.add("wrong");
+      $("feedback").textContent="Not quite. Correct answer: "+q[correct+1]+".";
+    }
+    $("nextQuestion").classList.remove("hidden");
+    root.querySelector(".quiztop span:last-child").textContent="Score: "+state.score;
+  }));
+  $("nextQuestion").onclick=()=>{state.qIndex++;state.answered=false;renderQuestion()};
+}
+$("startQuiz").addEventListener("click",startQuiz);
+
+savedFavs();
+loadCharacters();
+loadAnime();
+</script>
+</body>
+</html>
+
